@@ -1,4 +1,11 @@
-# History files
+.DS_Store
+__pycache__/
+*.ipynb_checkpoints
+*.py[cod]
+*$py.class
+
+
+# R History files
 .Rhistory
 .Rapp.history
 
