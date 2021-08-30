@@ -1,5 +1,9 @@
 
 
+# This script checks whether the results from "mylaast" in ./laast-eval/laast.R
+#    yields the same results as LAASTv2, using the Fig.2 data from Niiler (2020)
+
+
 rm( list = ls() ) # clear workspace
 graphics.off()    # close all graphics
 

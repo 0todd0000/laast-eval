@@ -1,4 +1,7 @@
 
+# This script demonstrates how to use the "mylaast" and "mylaast.minimal"
+#    functions in ./laast-eval/laast.R
+ 
 
 rm( list = ls() ) # clear workspace
 graphics.off()    # close all graphics

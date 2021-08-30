@@ -1,4 +1,8 @@
 
+# This script uses LAASTv2 to reproduce Fig.2 from Niiler (2020) and
+#    to export the main results.
+
+
 
 rm( list = ls() ) # clear workspace
 graphics.off()    # close all graphics
