@@ -12,9 +12,9 @@ dirR         <- file.path( dirREPO, 'R' )     # path to the R directory in this 
 
 
 # source all functions in laast-eval
-dirLAASTeval <- file.path(dirR, 'laast-eval')
-filesR       <- list.files(dirLAASTeval, pattern="*.R", full.names=TRUE)
-sapply(filesR, source)
+fileR        <- file.path(dirR, 'LAASTv2', 'LAASTv2.R')
+source(fileR)
+
 
 
 # load data:

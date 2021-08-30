@@ -61,7 +61,7 @@ mylaast.minimal <- function(y1, y2, alpha=0.05) {
 
 
 
-mylaast <- function(y1, y2, binSize, alpha=0.05, loess=TRUE, span=NULL, welch=TRUE) {
+mylaast <- function(y1, y2, binSize=2, alpha=0.05, loess=TRUE, span=NULL, welch=TRUE) {
     # LAAST implementation
     #
     #     This function can be used to replicate all main LAAST results
