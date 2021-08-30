@@ -131,44 +131,49 @@ source( fnameR1 )
 source( fnameR2 )
 
 
-# simulate:
-set.seed(2)
-J <- 8  # sample size
-Q <- 100
-FWHM <- 5
-n   <- 0  # number of datasets
-nfp <- 0  # number of false positives
-
-tc <- 2.0605586830770948
-for (i in 1:1000){
-    # y        <- GaussDensitySumNoise(ss)
-    y <- randn1d(J, Q, FWHM)
-    
-    # s     <- apply(y, 2, sd)
-    t        <- onesample.t.stat(y)
-    tc       <- rft.critical.t(y, alpha=0.05)
-
-    n     <- n + 1
-    fp    <- ( max( t ) > tc)
-    # print( max())
-    if (fp){
-        nfp <- nfp + 1
-    }
 
 
 
-    # results  <- mylaast.onesample(y, binSize=2, span=NULL, loess=T)
-    # pcrit    <- results[[1]]
-    # df           <- results[[2]]
-    # n     <- n + 1
-    # fp           <- min( df$pvals ) < pcrit
-    # if (fp){
-    #     nfp <- nfp + 1
-    # }
-    # print( c('Number of datasets: ', n, nfp / n) )
-    msg <- sprintf("Number of datasets: %d, False positive rate: %.3f", n, nfp/n)
-    print( msg )
-}
+
+
+# # simulate:
+# set.seed(2)
+# J <- 8  # sample size
+# Q <- 100
+# FWHM <- 5
+# n   <- 0  # number of datasets
+# nfp <- 0  # number of false positives
+#
+# tc <- 2.0605586830770948
+# for (i in 1:1000){
+#     # y        <- GaussDensitySumNoise(ss)
+#     y <- randn1d(J, Q, FWHM)
+#
+#     # s     <- apply(y, 2, sd)
+#     t        <- onesample.t.stat(y)
+#     tc       <- rft.critical.t(y, alpha=0.05)
+#
+#     n     <- n + 1
+#     fp    <- ( max( t ) > tc)
+#     # print( max())
+#     if (fp){
+#         nfp <- nfp + 1
+#     }
+#
+#
+#
+#     # results  <- mylaast.onesample(y, binSize=2, span=NULL, loess=T)
+#     # pcrit    <- results[[1]]
+#     # df           <- results[[2]]
+#     # n     <- n + 1
+#     # fp           <- min( df$pvals ) < pcrit
+#     # if (fp){
+#     #     nfp <- nfp + 1
+#     # }
+#     # print( c('Number of datasets: ', n, nfp / n) )
+#     msg <- sprintf("Number of datasets: %d, False positive rate: %.3f", n, nfp/n)
+#     print( msg )
+# }
 
 
 
