@@ -2,6 +2,24 @@
 
 # This script checks whether the results from "mylaast" in ./laast-eval/laast.R
 #    yields the same results as LAASTv2, using the Fig.2 data from Niiler (2020)
+#
+# NOTE: 
+#    There appears to be an error in LAASTv2 on Line 1189 of buildFiguresFinal.R:
+#       The call to "smoothAndFit" uses "type", but I believe that it should use "type1"
+#
+#       This causes smoothAndFit to uses the T value for the Welch test adjustment:
+#           (Line 624):  t = calcT(m1,m2,se1a,se2a,n1a,n2a);
+#   
+#       BUT to use the P value for the Pooled test adjustment:
+#           (Line 661):  t = calcPTpooled(m1,m2,sp,n1a,n2a);
+#
+#       I think this is simply a coding error, as a I see no rationale for
+#       using T-values for one case and P-values for the other.
+#
+#       Regardless, the current version of laast-eval was written to replicate
+#       the results of LAASTv2, so like LAASTv2 it uses T-values in one case
+#       and P-values in the other.
+
 
 
 rm( list = ls() ) # clear workspace
@@ -65,20 +83,6 @@ col0 <- rgb(0.2, 0.8, 1)
 col1 <- rgb(1, 0.5, 0.2)
 abline(h=log( pcrit0 ), col=col0)
 abline(h=log( pcritEVAL0 ), col=col0, lty=3, lwd=5)
-# The Welch critical p value from laast-eval is slightly different from LAASTv2
-#    laast-eval was used only with the pooled test
-#    There appears to be an error on Line 1189 of buildFiguresFinal.R:
-#       the function call to "smoothAndFit" uses "type", but I believe that it should use "type1"
-
-# Bizarrely, the smoothAndFit (in LAASTv2.R) uses the T value for the Welch test adjustment:
-#       (Line 624):  t = calcT(m1,m2,se1a,se2a,n1a,n2a);
-#   
-#       BUT it uses the P value for the Pooled test adjustment:
-#       (Line 661):  t = calcPTpooled(m1,m2,sp,n1a,n2a);
-#
-#       I think this must be an error, as a I see no rationale for using T for one and P for the other
-#       
-
 abline(h=log( pcrit1 ), col=col1)
 abline(h=log( pcritEVAL1 ), col=col1, lty=3, lwd=5)
 labels <- c("Niiler (2020) - pooled", "Niiler (2020) - Welch", "laast-eval - pooled", "laast-eval - Welch")
@@ -86,5 +90,3 @@ labels <- c(labels, "", "[pcrit] Niiler (2020) - pooled", "[pcrit] Niiler (2020)
 legend(30, -10, legend=labels, col=c("red", "blue", "red", "blue", "white", col0, col1, col0, col1), lty=c(1,1,3,3,0,1,1,3,3), lwd=c(1,1,5,5,0,1,1,5,5), cex=0.8)
 title()
 
-# # save to file:
-# dev.print(pdf, '/Users/todd/Desktop/fig.pdf')

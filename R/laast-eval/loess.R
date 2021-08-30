@@ -2,7 +2,7 @@
 
 
 
-findSpan <- function(y) {
+findSpan <- function(y, disp=FALSE) {
     
     # Store these as globals to evaluate smoothing
     # {TP}:  these three variables are defined outside this function in LAASTv2,
@@ -32,8 +32,10 @@ findSpan <- function(y) {
     x  <- as.vector( t(X) )
     y  <- as.vector( t(y) )
     
-    
-	print('Looking for best smooth... this may take a while...');
+    if (disp){
+        print('Looking for best smooth... this may take a while...');
+    }
+	
 	dfXY = data.frame(x,y);
 	
 	# Sort the data prior to all this
@@ -102,7 +104,9 @@ findSpan <- function(y) {
 			if (rms < rmsLast) {
 				rmsLast = rms;
 				s0 = span0;
-				print(paste("Current best span is = ",s0));
+                if (disp){
+				    print(paste("Current best span is = ",s0));
+                }
 				span0 = span0+dS # add extra dS to speed things up.
 				cnt = 0;
 			} 
@@ -115,7 +119,9 @@ findSpan <- function(y) {
 		}
 	
 	}
-	print("OK, smoothing parameter found...");
+    if (disp){
+	    print("OK, smoothing parameter found...");
+    }
 	return (s0);
 	
 }

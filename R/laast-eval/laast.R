@@ -168,4 +168,52 @@ mylaast <- function(y1, y2, binSize=2, alpha=0.05, loess=TRUE, span=NULL, welch=
 
 
 
+mylaast.onesample <- function(y, binSize=2, alpha=0.05, loess=TRUE, span=NULL) {
+    # One-sample LAAST implementation
+    #
+    #     This function was created to test the one-sample case in simulation;
+    #     If LAAST is valid for the two-sample case, it should also be valid 
+    #     for the one-sample case.
+    
+    # (1) Estimate mean and SD
+    if (loess){  # LOESS-smoothed mean and SD estimates
+        # estimate span
+        #     Optionally skip the computationally-expensive findSpan procedure
+        #     by specifying a span value when calling "mylaast"
+        if (is.null(span)){
+            span  <- findSpan(y)
+        }
+        # specify x range:
+        Q         <- ncol(y)  # numnber of domain nodes
+        if (Q%%2==0){  # number of domain nodes is even
+            xmin  <- 0
+            xmax  <- Q
+        } else {
+            xmin  <- 1
+            xmax  <- Q
+        }
+        # smooth using LOESS:
+        model <- mymodelSeries(y, binSize, span, xmin, xmax)
+        q     <- model$times
+        m     <- model$m1
+        s     <- model$sd1
+        n     <- model$n1
+        
+    } else {  # least-squares estimates 
+        q     <- c( 1 : ncol(y) )
+        m     <- colMeans( y )
+        s     <- apply(y, 2, sd)
+        n     <- nrow(y) * rep(1, ncol(y) )
+    }
+
+    # (2) Calculate t statistics and conduct inference
+    t     <- m / ( s / sqrt(n) )                 # t statistic
+    degF  <- n - 1                               # degrees of freedom
+    pvals <- 2 * pt( abs(t), degF, lower=FALSE)  # p-values (uncorrected, two-tailed)
+    pcrit <- laast.critical.pvalue( t , alpha )  # LAAST's correlation-adjusted critical p value
+    df    <- data.frame(q,t,pvals,m,s,n,degF)
+    return(   list( pcrit, df)   )
+}
+
+
 
