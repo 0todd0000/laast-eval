@@ -26,6 +26,7 @@ source( fnameR3 )
 # load data:
 fname.csv    <- file.path(dirDATA, 'Besier2009-MedGastrocF.csv')
 # fname.csv    <- file.path(dirDATA, 'Gaussian_FWHM=20.csv')
+fname.csv    <- file.path(dirDATA, 'Gaussian_FWHM=20_Q=101.csv')
 # fname.csv    <- file.path(dirDATA, 'SimulatedTwoLocalMax.csv')
 data.list    <- read.data( fname.csv )
 y1           <- data.list[[1]]

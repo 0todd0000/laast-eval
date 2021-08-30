@@ -61,9 +61,6 @@ mylaast.minimal <- function(y1, y2, alpha=0.05) {
     pcrit <- laast.critical.pvalue( pvals, alpha )
     df    <- data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF)
     return(   list( pcrit, df)   )
-    # # calculate the LAAST correlation-adjusted critical p value
-    # pcrit.laast <<- laast.critical.pvalue( pvals, alpha )
-    # return( data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF) )
 }
 
 
@@ -71,21 +68,29 @@ mylaast.minimal <- function(y1, y2, alpha=0.05) {
 mylaast <- function(y1, y2, binSize=2, alpha=0.05, loess=TRUE, span=NULL, welch=TRUE) {
     # LAAST implementation
     #
-    #     This function can be used to replicate all main LAAST results
-    #     from Niiler (2020)
+    #     This function can be used to replicate all main LAAST results from Niiler (2020)
+    #     
     
     # (1) Estimate means, SDs and sample sizes
     if (loess){  # LOESS-smoothed mean and SD estimates
         # estimate span
-        # optionally skip the computationally-expensive findSpan procedure by specifying a span value when calling "mylaast"
+        #     Optionally skip the computationally-expensive findSpan procedure
+        #     by specifying a span value when calling "mylaast"
         if (is.null(span)){
             span1 <- findSpan(y1)
             span2 <- findSpan(y2)
             span  <- min( c(span1,span2) )
         }
+        # specify x range:
+        Q         <- ncol(y1)  # numnber of domain nodes
+        if (Q%%2==0){  # number of domain nodes is even
+            xmin  <- 0
+            xmax  <- Q
+        } else {
+            xmin  <- 1
+            xmax  <- Q
+        }
         # smooth the first group using LOESS:
-        xmin  = 0
-        xmax  = 100
         mod1  <- mymodelSeries(y1, binSize, span, xmin, xmax)
         q     <- mod1$times
         m1    <- mod1$m1
