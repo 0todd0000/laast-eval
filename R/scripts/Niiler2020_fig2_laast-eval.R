@@ -16,28 +16,24 @@ read.Besier.data <- function(file.name){
 }
 
 # load data:
-fname.csv <- 'Besier2009-MedGastrocF.csv'
-data.list <- read.Besier.data( fname.csv )
-y1        <- data.list[[1]]
-y2        <- data.list[[2]]
+fname.csv    <- 'Besier2009-MedGastrocF.csv'
+data.list    <- read.Besier.data( fname.csv )
+y1           <- data.list[[1]]
+y2           <- data.list[[2]]
 
-# source all files in mylaast
-dir0       <- dirname( sys.frame(1)$ofile )
-dirMYLAAST <- file.path(dir0, 'mylaast')
-filesR     <- list.files(dirMYLAAST, pattern="*.R", full.names=TRUE)
+# source all files in laast-eval
+dirR         <- dirname( dirname( sys.frame(1)$ofile ) )  # path to the R directory in this repository
+dirLAASTeval <- file.path(dirR, 'laast-eval')
+filesR       <- list.files(dirLAASTeval, pattern="*.R", full.names=TRUE)
 sapply(filesR, source)
-
-
-graphics.off()
 
 
 
 binSize = 2
-# type    = 'pp'
 # results = mylaast(y1, y2, binSize)
 results = mylaast(y1, y2, binSize, span=NULL, loess=T, welch=T)
 # results = mylaast.minimal(y1, y2, alpha=0.05)
-# # results = mylaast(x1, x2, y1, y2, binSize, type)
+
 
 
 print( pcrit.laast )  # LAAST-adjustuded critical p value (global)
