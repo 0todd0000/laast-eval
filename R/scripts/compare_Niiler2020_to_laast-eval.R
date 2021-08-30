@@ -37,8 +37,8 @@ data.list    <- read.data( fname.csv )
 y1           <- data.list[[1]]
 y2           <- data.list[[2]]
 # resultsMIN   <- mylaast.minimal(y1, y2, alpha=0.05)
-span         <- NULL
-span         <- 0.17
+span         <- NULL   # setting span to NULL will trigger mylaast to estimate it
+span         <- 0.17   # optionally use this to bypass the computationally expensive span estimate
 results0     <- mylaast(y1, y2, binSize=2, span=span, loess=T, welch=F)  # pooled
 results1     <- mylaast(y1, y2, binSize=1, span=span, loess=T, welch=T)  # Welch (./LAASTv2/buildDiguresFinal.R uses binSize=1 on Line 663)
 pcritEVAL0   <- results0[[1]]
@@ -50,6 +50,9 @@ dfEVAL1      <- results1[[2]]
 
 # plot:
 graphics.off()
+
+
+# pdf('/Users/todd/Desktop/fig.pdf')
 plot( df0$times, df0$logp, type='l', col='blue', xlab="Time (%)", ylab="log(p)", ylim=c(-15,0) )
 lines( df1$times, df1$logp, col='red' )
 lines( dfEVAL0$q, log( dfEVAL0$pvals ), col='blue', lty=3, lwd=5 )
@@ -78,3 +81,6 @@ labels <- c("Niiler (2020) - pooled", "Niiler (2020) - Welch", "laast-eval - poo
 labels <- c(labels, "", "[pcrit] Niiler (2020) - pooled", "[pcrit] Niiler (2020) - Welch", "[pcrit] laast-eval - pooled", "[pcrit] laast-eval - Welch")
 legend(30, -10, legend=labels, col=c("red", "blue", "red", "blue", "white", col0, col1, col0, col1), lty=c(1,1,3,3,0,1,1,3,3), lwd=c(1,1,5,5,0,1,1,5,5), cex=0.8)
 title()
+
+# # save to file:
+# dev.print(pdf, '/Users/todd/Desktop/fig.pdf')

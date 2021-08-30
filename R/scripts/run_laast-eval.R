@@ -33,13 +33,18 @@ y2           <- data.list[[2]]
 
 
 # run LAAST:
-# results      <- mylaast(y1, y2, binSize=2, span=NULL, loess=T, welch=T)
-results      <- mylaast.minimal(y1, y2, alpha=0.05)
+results0     <- mylaast(y1, y2, binSize=2, span=0.17, loess=T, welch=T)
+results1     <- mylaast.minimal(y1, y2, alpha=0.05)
+pcrit0       <- results0[[1]]
+pcrit1       <- results1[[1]]
+df0          <- results0[[2]]
+df1          <- results1[[2]]
 
 
 # report results:
-print( pcrit.laast )  # LAAST-adjusted critical p value (global)
-plot( results$q, log(results$pvals), type='l' )
+print( c(pcrit0, pcrit1) )  # LAAST-adjusted critical p value (global)
+plot( df0$q, log(df0$pvals), type='l', col="blue" )
+lines( df1$q, log(df1$pvals), col="red" )
 
 
 
