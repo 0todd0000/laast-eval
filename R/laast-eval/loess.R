@@ -7,6 +7,7 @@ findSpan <- function(y) {
     # Store these as globals to evaluate smoothing
     # {TP}:  these three variables are defined outside this function in LAASTv2,
     #        but it appears that they can be confined to the local namespace
+    #        without affecting the results.
     rmsArr = c(); # RMS values found in the smoothing iterations
     rmsCnt = 1;	  # index of rmsArr and spanArr
     spanArr = c();# span values found in the smoothing iterations
