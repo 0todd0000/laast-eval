@@ -24,6 +24,9 @@ laast.critical.pvalue <- function(t, alpha=0.05){
 }
 
 
+
+
+
 mylaast.minimal <- function(y1, y2, alpha=0.05) {
     # Minimal LAAST implementation
     #
@@ -53,10 +56,14 @@ mylaast.minimal <- function(y1, y2, alpha=0.05) {
     t     <- (m1 - m2) / (sp * sqrt( 1/n1 + 1/n2 ) )
     degF  <- n1 + n2 - 2  # degrees of freedom
 	# calculate (uncorrected, two-tailed) p values
-	pvals = 2 * pt( abs(t), degF, lower=FALSE)
+	pvals <- 2 * pt( abs(t), degF, lower=FALSE)
     # calculate the LAAST correlation-adjusted critical p value
-    pcrit.laast <<- laast.critical.pvalue( pvals, alpha )
-    return( data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF) )
+    pcrit <- laast.critical.pvalue( pvals, alpha )
+    df    <- data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF)
+    return(   list( pcrit, df)   )
+    # # calculate the LAAST correlation-adjusted critical p value
+    # pcrit.laast <<- laast.critical.pvalue( pvals, alpha )
+    # return( data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF) )
 }
 
 
@@ -114,12 +121,17 @@ mylaast <- function(y1, y2, binSize=2, alpha=0.05, loess=TRUE, span=NULL, welch=
     }
     
     # (3) Calculate (uncorrected, two-tailed) p values
-    pvals = 2 * pt( abs(t), degF, lower=FALSE)
+    pvals <- 2 * pt( abs(t), degF, lower=FALSE)
     
     # (4) Calculate LAAST's correlation-adjusted critical p value
-    pcrit.laast <<- laast.critical.pvalue( pvals, alpha )
-
-    return( data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF) )
+    if (welch){
+        pcrit <- laast.critical.pvalue( t, alpha )
+    } else {
+        pcrit <- laast.critical.pvalue( pvals, alpha )
+    }
+    
+    df    <- data.frame(q,t,pvals,m1,m2,s1,s2,n1,n2,degF)
+    return(   list( pcrit, df)   )
 }
 
 

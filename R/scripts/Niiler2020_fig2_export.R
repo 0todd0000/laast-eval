@@ -128,7 +128,7 @@ results    <- buildFigure2_tp( inputData, RFTtvalues )
 pcrit_pooled <- results[[1]]  # critical p value (pooled SD)
 pcrit_welch  <- results[[2]]  # critical p value (Welch)
 df           <- data.frame( pcrit_pooled, pcrit_welch )
-fnameCSV     <- file.path( dirDATA, 'Niiler2020-results', 'critical_p_values.csv')
+fnameCSV     <- file.path( dirDATA, 'Niiler2020-results', 'fig2-pcrit.csv')
 write.csv( df, fnameCSV, row.names=F)
 
 
