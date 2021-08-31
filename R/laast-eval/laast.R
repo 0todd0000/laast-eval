@@ -21,7 +21,7 @@ laast.critical.pvalue <- function(t, alpha=0.05){
     tL     <- t[1:length(t)-1]
     tR     <- t[2:length(t)]
     rho    <- cor(tL, tR)
-    alphaN <- alpha / ( length(t)*(1-rho^2)+ rho^2 )
+    alphaN <- alpha / ( length(t)*(1-rho^2)+ rho^2 )  # Eqn.2 from Niiler (2020)
     return( alphaN )
 }
 
