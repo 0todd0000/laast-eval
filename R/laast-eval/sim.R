@@ -26,7 +26,6 @@ rft.critical.t <- function( r, alpha=0.05 ){
     #                 t values calculated from smooth 1D Gaussian data are
     #                 expected to reach tcrit with a probability of alpha
     #
-    r   <- y - colMeans(y)                  # residuals
     df  <- nrow(y) - 1                      # degrees of freedom
     rn  <- r / sqrt( colSums( r^2 ) )       # normalized residuals
     rdn <- apply(rn, 1, diff)               # derivatives of normalized residuals
