@@ -1,7 +1,7 @@
 
 
 read.data <- function(file.name){
-    a         <- read.csv(fname.csv, header=FALSE)
+    a         <- read.csv(file.name, header=FALSE)
     a         <- as.matrix( a )
     group     <- a[,1]
     y         <- a[,2:ncol(a)]
