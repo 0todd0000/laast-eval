@@ -1,6 +1,7 @@
 
-# This script calculates the false positive rate for
-#    a one-sample LAAST implementation: "mylaast.onesample"
+# This script calculates the false positive rates in one-sample tests for:
+#    - LAAST  (see "mylaast.onesample" in ./R/laast.R)
+#    - RFT (random field theory;  see "rft.critical.t" in ./R/sim.R)
  
 
 rm( list = ls() ) # clear workspace
@@ -8,49 +9,21 @@ graphics.off()    # close all graphics
 
 
 
-
-onesample.t.stat <- function(y){
-    m     <- colMeans( y )
-    s     <- apply(y, 2, sd)
-    n     <- nrow(y)
-    t     <- m / ( s / sqrt(n) )
-    return( t )
-}
-
-
-rft.critical.t <- function( y, alpha=0.05 ){
-    # Calculate the critical t threshold using a Random Field Theory correction
-    r   <- y - colMeans(y)                  # residuals
-    df  <- nrow(y) - 1                      # degrees of freedom
-    rn  <- r / sqrt( colSums( r^2 ) )       # normalized residuals
-    rdn <- apply(rn, 1, diff)               # derivatives of normalized residuals
-    L0  <- 1                                # 1 for unbroken fields
-    L1  <- sum( sqrt( colSums( rdn^2 ) ) )  # Lipschitz-Killing curvature of the residuals
-    eec <- function(u){                     # expected Euler characteristic
-        a0 <- L0 * ( 1 - pt( u, df = df ) )
-        a1 <- L1 * ( 1 + u^2 / df )^( ( 1 - df ) / 2 ) / ( 2 * pi )
-        return( a0 + a1 )
-    }
-    tcrit <- uniroot( function(u) eec(u) - alpha, lower=1, upper=10 )$root  # threshold "u" that yields eec=alpha
-    return( tcrit )
-}
-
-
-
-rnorm1d <- function( J=8, Q=101, nbasis=10, norder=4 ){
-    library(fda)
-    x       <- seq(0,1,length.out=Q)
-    basis   <- create.bspline.basis(rangeval = c(0,1), nbasis=nbasis, norder=norder)
-    coef    <- matrix( rnorm(J*nbasis), nbasis, J)
-    fdobj   <- fd(coef, basis)
-    y       <- eval.fd(x, fdobj)
-    return( t(y) )
-}
+# (0) Source R files:
+dirREPO  <- dirname( dirname( dirname( sys.frame(1)$ofile ) ) )  # repository path
+dirR     <- file.path( dirREPO, 'R' )     # path to the R directory in this repository
+# source the required laast-eval functions:
+fnameR1  <- file.path(dirR, 'laast-eval', 'laast.R')
+fnameR2  <- file.path(dirR, 'laast-eval', 'loess.R')
+fnameR3  <- file.path(dirR, 'laast-eval', 'sim.R')
+source( fnameR1 )
+source( fnameR2 )
+source( fnameR3 )
 
 
 
 
-# (0) Check single sample generation
+# (1) Check single sample generation
 J      <- 8
 Q      <- 101
 nbasis <- 10
@@ -58,18 +31,6 @@ norder <- 3
 y      <- rnorm1d(J, Q, nbasis, norder)
 graphics.off()
 matplot( t(y), type='l', lty=1, lwd=0.5, col='blue')
-
-
-
-# (1) Source R files:
-dirREPO  <- dirname( dirname( dirname( sys.frame(1)$ofile ) ) )  # repository path
-dirR     <- file.path( dirREPO, 'R' )     # path to the R directory in this repository
-# source the required laast-eval functions:
-fnameR1  <- file.path(dirR, 'laast-eval', 'laast.R')
-fnameR2  <- file.path(dirR, 'laast-eval', 'loess.R')
-source( fnameR1 )
-source( fnameR2 )
-
 
 
 
@@ -91,22 +52,23 @@ nfp.laast <- 0   # number of false positives (LAAST)
 # run simulation:
 set.seed(2)
 for (i in 1:1000){
-    n    <- n + 1 # total number of datasets
-    y    <- rnorm1d(J, Q, nbasis, norder)
+    n    <- n + 1                          # increment total number of datasets
+    y    <- rnorm1d(J, Q, nbasis, norder)  # generate random dataset
     
-    # RFT inference (on the typical, least-squares, one-sample t statistic):
-    t    <- onesample.t.stat(y)
-    tc   <- rft.critical.t(y, alpha=0.05)  # critical t value
-    if ( max(t) > tc ){
-        nfp.rft <- nfp.rft + 1
+    # RFT inference:
+    t    <- onesample.t.stat(y)            # typical, least-squares, one-sample t statistic
+    r    <- y - colMeans(y)                # residuals
+    tc   <- rft.critical.t(r, alpha=0.05)  # critical t value (calculated from the residuals of y)
+    if ( max(t) > tc ){                    # false positive encountered
+        nfp.rft <- nfp.rft + 1             # increment number of false positives
     }
     
-    # LAAST:
+    # LAAST inference:
     results  <- mylaast.onesample(y, binSize=2, span=NULL, loess=T)
-    pc       <- results[[1]]   # critical p value
-    p        <- results[[2]]$pvals
-    if ( min(p) < pc ){
-        nfp.laast <- nfp.laast + 1
+    pc       <- results[[1]]         # critical p value
+    p        <- results[[2]]$pvals   # p values
+    if ( min(p) < pc ){              # false positive encountered
+        nfp.laast <- nfp.laast + 1   # increment number of false positives
     }
 
     # report results
