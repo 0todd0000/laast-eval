@@ -90,7 +90,7 @@ with open(fnameTEX, 'w') as f:
 	# write table end:
 	f.write(  '\\hline\n')
 	f.write(  '\\end{tabular}\n'  )
-	f.write(  '\\label{table:sim0d}')
+	f.write(  '\\label{table:sim0d}\n')
 	f.write(  '\\end{table}\n\n\n'  )
 	f.write('\\end{document}')
 
