@@ -1,8 +1,18 @@
+# macos files
 .DS_Store
+
+
+# Python files
 __pycache__/
 *.ipynb_checkpoints
 *.py[cod]
 *$py.class
+
+
+# LaTeX files
+*.log
+*.aux
+*.synctex.gz
 
 
 # R History files
