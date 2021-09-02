@@ -118,7 +118,7 @@ plt.setp(hr[2], color='r', lw=3, zorder=10)
 # plt.setp(hr[10], color='c', lw=2)
 plt.setp(hr[18], color='c', lw=3, zorder=10)
 
-# plot RFT simulation:
+# plot Gaussian simulation:
 ax0,ax1,ax2,ax3 = AX[:,2]
 ax0.axhline(0, color='k', lw=3)
 ax0.set_ylim(-3, 3)
@@ -126,10 +126,14 @@ ax1.plot( q2, y20.T, 'k', lw=0.2)
 ax2.plot( q2, y2.T, '0.5', lw=0.5)
 ax2.plot( q2, y2.mean(axis=0), 'k', lw=3 )
 ax2.axhline(0, color='k', ls=':')
-ax3.plot(q2, r2.T, '0.5', lw=0.5)
+hr = ax3.plot(q2, r2.T, '0.5', lw=0.5)
 ax3.plot(q2, r2.mean(axis=0), 'k', lw=3)
 
 plt.setp([ax2,ax3], ylim=(-3,3))
+
+hr0,hr1   = hr[0], hr[1]
+plt.setp(hr0, color='r', lw=3, zorder=10)
+plt.setp(hr1, color='c', lw=3, zorder=10)
 
 
 # plot LAAST simulation:
